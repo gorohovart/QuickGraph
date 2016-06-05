@@ -136,7 +136,7 @@ namespace VertexColoringPlugin
         private UndirectedGraph<GraphXVertex, TaggedEdge<GraphXVertex, int>> ReadInputGraph(string dotSource)
         {
             var vertexFun = VertexFactory.Name;
-            var edgeFun1 = EdgeFactory<GraphXVertex>.Weighted1(0);
+            var edgeFun1 = EdgeFactory<GraphXVertex>.WeightedTaggedEdge(0);
             var edgeFun = EdgeFactory<GraphXVertex>.Weighted(0);
             var graph = UnGraph.LoadDot(dotSource, vertexFun, edgeFun1);
             bigraph = BiGraph.LoadDot(dotSource, vertexFun, edgeFun);
