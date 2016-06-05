@@ -6,7 +6,6 @@ open System.Collections.Generic
 open QuickGraph
 
 type EdgeColoringAlgorithm<'Vertex, 'Edge when 'Edge :> TaggedEdge<'Vertex, int> and 'Vertex: equality>() =
-    
     let colored = new Event<_>()
 
     [<CLIEvent>]
@@ -48,9 +47,9 @@ type EdgeColoringAlgorithm<'Vertex, 'Edge when 'Edge :> TaggedEdge<'Vertex, int>
         let rec shift (listEdges : 'Edge list) =
             match listEdges with
             | e1 :: e2 :: edges -> 
-                e1.Tag <- e2.Tag
-                colored.Trigger(e1.Source, e1.Target, e1.Tag)
-                shift (e2 :: edges) 
+                             e1.Tag <- e2.Tag
+                             colored.Trigger(e1.Source, e1.Target, e1.Tag)
+                             shift (e2 :: edges) 
             | e1 :: edges -> e1.Tag <- 0
                              colored.Trigger(e1.Source, e1.Target, e1.Tag)
             | _ -> ()
@@ -59,8 +58,8 @@ type EdgeColoringAlgorithm<'Vertex, 'Edge when 'Edge :> TaggedEdge<'Vertex, int>
         let rec funSeqBeforeEdge s e res =
                 match s with
                 | hd :: tl when not <| EdgeColoringAlgorithm.equalEdges hd e -> funSeqBeforeEdge tl e <| hd :: res
-                | hd :: tl                             -> hd :: res
-                | []                                   -> res
+                | hd :: tl                                                   -> hd :: res
+                | []                                                         -> res
 
         //make subgraph with edges which have one of 2 selected colors
         let makeSubGraph color1 color2 =
@@ -75,9 +74,8 @@ type EdgeColoringAlgorithm<'Vertex, 'Edge when 'Edge :> TaggedEdge<'Vertex, int>
             let listOfEdges = Seq.toList <| subGraph.AdjacentEdges(vertex) 
             let filteredlist = List.filter (fun e -> not <| List.exists (EdgeColoringAlgorithm.equalEdges e) comp) listOfEdges          
             match filteredlist with
-            | e :: es -> 
-                            let another = EdgeColoringAlgorithm.anotherVertexInEdge e vertex
-                            makeConnectedComponent subGraph another <| e :: comp
+            | e :: es -> let another = EdgeColoringAlgorithm.anotherVertexInEdge e vertex
+                         makeConnectedComponent subGraph another <| e :: comp
             | _      -> comp
 
         let inverseColorInComponent (comp : 'Edge list) color1 color2 = 
@@ -97,7 +95,6 @@ type EdgeColoringAlgorithm<'Vertex, 'Edge when 'Edge :> TaggedEdge<'Vertex, int>
             | Some c  -> //no conflict
                          edge.Tag <- c
                          colored.Trigger(edge.Source, edge.Target, edge.Tag)
-                     
             | None    -> 
                 //conflict
                 let fanSeq = makeSequence sourse target [edge]
